@@ -48,7 +48,15 @@ files.forEach(file => {
   chunkedArr.forEach((chunk, index, arr) => {
     const fileName = `${file.split('\.')[0]}-${index}-${numChunks}`;
     const dirname = `./output/${file.split('\.')[0]}`
-    console.log(fileName, dirname)
+    const extesion = `.${file.split('\.')[1]}`
+
+
+    if (!fs.existsSync('output')) {
+      fs.mkdirSync('output', (err) => {
+        if (err) throw err
+        console.log(`Pasta output criada com sucesso`)
+      })
+    }
 
     if (!fs.existsSync(dirname)) {
       fs.mkdirSync(dirname, (err) => {
@@ -57,7 +65,9 @@ files.forEach(file => {
       })
     }
 
-    fs.writeFileSync(`${dirname}/${fileName}`, chunk)
+    fs.writeFileSync(`${dirname}/${fileName}${extesion}`, chunk)
+    console.log(fileName, dirname)
+
 
   })
 
