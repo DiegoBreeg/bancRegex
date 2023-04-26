@@ -12,10 +12,11 @@ const files = fs.readdirSync(folderPath, (err, files) => {
 })
 
 files.forEach(file => {
+  const stats = fs.statSync(`./input/${file}`)
+  const sizeInKB = (stats.size / 1024).toFixed(2)
   const dataBuffer = fs.readFileSync(`./input/${file}`, data => data)
   const rawData = dataBuffer.toString()
   const regex = /[0-9]+\T\s/g;
-
   const splitedArray = rawData.split(regex)
   const header = splitedArray.shift();
   const splitedFooter = rawData.split(/\n/ig)
@@ -42,12 +43,16 @@ files.forEach(file => {
   }
 
   const arr = organizedData
-  const numChunks = 10;
-  const chunkedArr = chunkArray(arr, Math.ceil(arr.length / numChunks));
+  const maxChunkSizeInKb = 5120
+  const numChunks = Math.ceil(sizeInKB / maxChunkSizeInKb)
+  console.log(numChunks, sizeInKB, maxChunkSizeInKb)
 
+
+
+  const chunkedArr = chunkArray(arr, Math.ceil(arr.length / numChunks));
   chunkedArr.forEach((chunk, index, arr) => {
     const data = index == arr.length - 1 ? header + chunk : header + chunk + footer
-    const fileName = `${file.split('\.')[0]}-${index}-${numChunks}`;
+    const fileName = `${file.split('\.')[0]}-${index + 1}-${numChunks}`;
     const dirname = `./output/${file.split('\.')[0]}`
     const extesion = `.${file.split('\.')[1]}`
 
