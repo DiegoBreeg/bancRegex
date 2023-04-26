@@ -17,7 +17,7 @@ files.forEach(file => {
   const regex = /[0-9]+\T\s/g;
 
   const splitedArray = str.toString().split(regex)
-  const firstItem = splitedArray.shift();
+  const header = splitedArray.shift();
 
   const prefixSplitedData = str.toString().match(regex)
   const splitedData = splitedArray.slice();
@@ -25,7 +25,7 @@ files.forEach(file => {
 
   for (let i = 0; i < prefixSplitedData.length; i++) {
     if (i == 0) {
-      organizedData.push(firstItem + prefixSplitedData[i] + splitedData[i])
+      organizedData.push(prefixSplitedData[i] + splitedData[i])
       continue
     }
     organizedData.push(prefixSplitedData[i] + splitedData[i])
@@ -46,6 +46,7 @@ files.forEach(file => {
   const chunkedArr = chunkArray(arr, Math.ceil(arr.length / numChunks));
 
   chunkedArr.forEach((chunk, index, arr) => {
+    const data = header + chunk
     const fileName = `${file.split('\.')[0]}-${index}-${numChunks}`;
     const dirname = `./output/${file.split('\.')[0]}`
     const extesion = `.${file.split('\.')[1]}`
@@ -65,7 +66,7 @@ files.forEach(file => {
       })
     }
 
-    fs.writeFileSync(`${dirname}/${fileName}${extesion}`, chunk)
+    fs.writeFileSync(`${dirname}/${fileName}${extesion}`, data)
     console.log(fileName, dirname)
 
 
